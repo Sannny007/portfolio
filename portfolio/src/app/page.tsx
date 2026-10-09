@@ -6,11 +6,11 @@ export default function Home() {
     <main>
       <Hero />
       <section id="work" className="min-h-svh px-5 py-24 md:px-12">
-        <p className="font-mono text-xs uppercase tracking-widest">01 — Work</p>
+        <p className="font-mono text-xs uppercase tracking-widest">Work</p>
       </section>
       <About />
       <section id="contact" className="min-h-svh px-5 py-24 md:px-12">
-        <p className="font-mono text-xs uppercase tracking-widest">03 — Contact</p>
+        <p className="font-mono text-xs uppercase tracking-widest">Contact</p>
       </section>
     </main>
   );

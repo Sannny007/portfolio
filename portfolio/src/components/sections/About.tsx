@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRef } from "react";
 import { gsap, SplitText, useGSAP } from "@/lib/gsap";
 import { about } from "@/data/about";
@@ -30,7 +31,21 @@ export default function About() {
           );
         },
       });
-      
+
+      gsap.from(".about-photo", {
+        clipPath: "inset(100% 0% 0% 0%)",
+        duration: 1.4,
+        ease: "power4.out",
+        scrollTrigger: { trigger: ".about-photo", start: "top 85%" },
+      });
+
+      gsap.from(".about-photo-img", {
+        scale: 1.35,
+        duration: 1.8,
+        ease: "power3.out",
+        scrollTrigger: { trigger: ".about-photo", start: "top 85%" },
+      });
+
       gsap.from(".about-fade", {
         opacity: 0,
         y: 24,
@@ -45,11 +60,23 @@ export default function About() {
 
   return (
     <section ref={root} id="about" className="px-5 py-24 md:px-12 md:py-40">
-      <p className="mb-10 font-mono text-xs uppercase tracking-widest md:mb-16">02 — About</p>
+      <p className="mb-10 font-mono text-xs uppercase tracking-widest md:mb-16">About</p>
 
-      <p className="about-lead text-about max-w-[22ch] font-display leading-[1.08] tracking-[-0.02em] md:max-w-[26ch]">
-        {about.lead}
-      </p>
+      <div className="grid gap-12 md:grid-cols-12 md:items-end">
+        <p className="about-lead text-about font-display tracking-[-0.02em] md:col-span-8">
+          {about.lead}
+        </p>
+
+        <div className="about-photo group relative aspect-4/5 w-3/4 overflow-hidden md:col-span-4 md:w-full">
+          <Image
+            src="/images/sanny.png"
+            alt="Portrait of Sanny Kumar Sharma"
+            fill
+            sizes="(min-width: 768px) 33vw, 75vw"
+            className="about-photo-img object-cover grayscale transition-[filter] duration-700 group-hover:grayscale-0"
+          />
+        </div>
+      </div>
 
       <div className="about-details mt-16 grid gap-12 border-t border-ink/20 pt-6 md:mt-28 md:grid-cols-12">
         <div className="space-y-5 text-base leading-relaxed md:col-span-6 md:text-lg">

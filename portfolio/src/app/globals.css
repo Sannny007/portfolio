@@ -13,17 +13,9 @@
   --font-display: var(--font-instrument);
   --font-sans: var(--font-hanken);
   --font-mono: var(--font-dm-mono);
-}
 
-::selection {
-  background: var(--accent);
-  color: var(--paper);
-}
-
-.text-hero {
-  font-size: clamp(3.25rem, 12.5vw, 13rem);
-}
-
-.text-about {
-  font-size: clamp(1.9rem, 4.6vw, 4.5rem);
+  --text-hero: clamp(3.25rem, 12.5vw, 13rem);
+  --text-hero--line-height: 0.9;
+  --text-about: clamp(2.25rem, 6vw, 5.5rem);
+  --text-about--line-height: 1.05;
 }
