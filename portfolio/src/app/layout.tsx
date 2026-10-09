@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Hanken_Grotesk, DM_Mono } from "next/font/google";
 import SmoothScroll from "@/components/layout/SmoothScroll";
-import "lenis/dist/lenis.css";
-import "./globals.css";
 import Nav from "@/components/layout/Nav";
 import Cursor from "@/components/layout/Cursor";
+import "lenis/dist/lenis.css";
+import "./globals.css";
 
 const display = Instrument_Serif({
   subsets: ["latin"],
@@ -33,7 +33,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
       <body className="bg-paper font-sans text-ink antialiased">
-        <SmoothScroll>{children}</SmoothScroll>
         <Cursor />
         <Nav />
         <SmoothScroll>{children}</SmoothScroll>

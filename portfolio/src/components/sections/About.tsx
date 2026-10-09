@@ -32,12 +32,16 @@ export default function About() {
         },
       });
 
-      gsap.from(".about-photo", {
-        clipPath: "inset(100% 0% 0% 0%)",
-        duration: 1.4,
-        ease: "power4.out",
-        scrollTrigger: { trigger: ".about-photo", start: "top 85%" },
-      });
+      gsap.fromTo(
+        ".about-photo",
+        { clipPath: "circle(0% at 50% 50%)" },
+        {
+          clipPath: "circle(75% at 50% 50%)",
+          duration: 1.4,
+          ease: "power4.out",
+          scrollTrigger: { trigger: ".about-photo", start: "top 85%" },
+        }
+      );
 
       gsap.from(".about-photo-img", {
         scale: 1.35,
@@ -67,13 +71,13 @@ export default function About() {
           {about.lead}
         </p>
 
-        <div className="about-photo group relative aspect-4/5 w-3/4 overflow-hidden md:col-span-4 md:w-full">
+        <div className="about-photo group relative aspect-square w-3/4 overflow-hidden rounded-full md:col-span-4 md:w-full">
           <Image
             src="/images/sanny.png"
             alt="Portrait of Sanny Kumar Sharma"
             fill
             sizes="(min-width: 768px) 33vw, 75vw"
-            className="about-photo-img object-cover grayscale transition-[filter] duration-700 group-hover:grayscale-0"
+            className="about-photo-img object-cover object-[50%_20%] grayscale transition-[filter] duration-700 group-hover:grayscale-0"
           />
         </div>
       </div>
