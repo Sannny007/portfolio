@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { projects } from "@/data/projects";
 
@@ -12,6 +12,7 @@ export default function Work() {
   const preview = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
+  // rows ka scroll reveal
   useGSAP(
     () => {
       gsap.from(".work-row", {
@@ -23,24 +24,32 @@ export default function Work() {
         clearProps: "opacity,transform",
         scrollTrigger: { trigger: ".work-list", start: "top 80%" },
       });
-
-      if (!finePointer()) return;
-
-      const el = preview.current!;
-      gsap.set(el, { xPercent: -50, yPercent: -50, scale: 0.8, opacity: 0 });
-
-      const x = gsap.quickTo(el, "x", { duration: 0.6, ease: "power3" });
-      const y = gsap.quickTo(el, "y", { duration: 0.6, ease: "power3" });
-
-      const move = (e: MouseEvent) => {
-        x(e.clientX);
-        y(e.clientY);
-      };
-      window.addEventListener("mousemove", move);
-      return () => window.removeEventListener("mousemove", move);
     },
     { scope: root }
   );
+
+  // preview card ko cursor ke peeche chalana
+  useEffect(() => {
+    if (!finePointer()) return;
+    const el = preview.current;
+    if (!el) return;
+
+    gsap.set(el, { xPercent: -50, yPercent: -50, scale: 0.8, opacity: 0 });
+
+    const x = gsap.quickTo(el, "x", { duration: 0.6, ease: "power3" });
+    const y = gsap.quickTo(el, "y", { duration: 0.6, ease: "power3" });
+
+    const move = (e: PointerEvent) => {
+      x(e.clientX);
+      y(e.clientY);
+    };
+
+    window.addEventListener("pointermove", move);
+    return () => {
+      window.removeEventListener("pointermove", move);
+      gsap.killTweensOf(el);
+    };
+  }, []);
 
   const show = (i: number) => {
     if (!finePointer()) return;

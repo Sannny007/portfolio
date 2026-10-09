@@ -5,6 +5,7 @@ import { gsap, SplitText, useGSAP } from "@/lib/gsap";
 import { getLenis } from "@/lib/lenis";
 import { site } from "@/data/site";
 import LocalTime from "../ui/LocalTime";
+import Year from "../ui/Year";
 
 export default function Contact() {
   const root = useRef<HTMLElement>(null);
@@ -81,7 +82,7 @@ export default function Contact() {
 
         <div className="contact-fade flex items-center justify-between md:justify-end md:gap-8">
           <span className="opacity-50">
-            © {new Date().getFullYear()} {site.name}
+            © <Year /> {site.name}
           </span>
           <button onClick={toTop} className="transition-colors hover:text-accent">
             Top ↑
