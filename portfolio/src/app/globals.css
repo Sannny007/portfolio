@@ -19,3 +19,7 @@
   background: var(--accent);
   color: var(--paper);
 }
+
+.text-hero {
+  font-size: clamp(3.25rem, 12.5vw, 13rem);
+}

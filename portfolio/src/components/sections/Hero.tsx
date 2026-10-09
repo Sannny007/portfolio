@@ -39,7 +39,7 @@ export default function Hero() {
       ref={root}
       className="flex min-h-svh flex-col justify-end gap-8 px-5 pb-8 pt-28 md:px-12 md:pb-12"
     >
-      <h1 className="hero-title font-display text-[clamp(3.25rem, 12.5vw, 13rem)] leading-[0.9] tracking-[-0.03em]">
+      <h1 className="hero-title text-hero font-display leading-[0.9] tracking-[-0.03em]">
         Full-Stack developer who <span className="italic text-accent">builds</span> for the web.
       </h1>
 
