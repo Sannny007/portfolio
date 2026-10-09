@@ -1,3 +1,5 @@
+import { site } from "./site";
+
 export const about = {
   lead: "I'm Sanny Kumar Sharma, a full-stack developer who likes building interfaces that feel considered, and systems that hold up underneath them.",
   body: [
@@ -10,9 +12,5 @@ export const about = {
     status: "2nd year",
   },
   learning: ["Next.js", "Docker"],
-  links: [
-    { label: "GitHub", href: "https://github.com/Sannny007" },
-    { label: "LinkedIn", href: "www.linkedin.com/in/sanny-kumar-sharma-2a8b7540a" },
-    { label: "Email", href: "mailto:sanny433sharma@gmail.com" },
-  ],
+  links: site.socials,
 };

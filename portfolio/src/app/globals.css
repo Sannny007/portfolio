@@ -18,6 +18,8 @@
   --text-hero--line-height: 0.9;
   --text-about: clamp(2.25rem, 6vw, 5.5rem);
   --text-about--line-height: 1.05;
+  --text-marquee: clamp(3rem, 9vw, 8rem);
+  --text-marquee--line-height: 1;
 }
 
 html {
@@ -26,4 +28,31 @@ html {
 
 .work-list:has(.work-item:hover) .work-item:not(:hover) {
   opacity: 0.3;
+}
+
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--ink);
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 45s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
 }
