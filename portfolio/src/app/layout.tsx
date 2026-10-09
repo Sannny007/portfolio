@@ -5,6 +5,7 @@ import Nav from "@/components/layout/Nav";
 import Cursor from "@/components/layout/Cursor";
 import "lenis/dist/lenis.css";
 import "./globals.css";
+import Intro from "@/components/layout/Intro";
 
 const display = Instrument_Serif({
   subsets: ["latin"],
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
       <body className="bg-paper font-sans text-ink antialiased">
+        <Intro />
         <Cursor />
         <Nav />
         <SmoothScroll>{children}</SmoothScroll>
