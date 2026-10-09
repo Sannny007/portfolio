@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #ece9e2;
+  --ink: #121212;
+  --accent: #e8452c;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-accent: var(--accent);
+  --font-display: var(--font-instrument);
+  --font-sans: var(--font-hanken);
+  --font-mono: var(--font-dm-mono);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--paper);
+}
