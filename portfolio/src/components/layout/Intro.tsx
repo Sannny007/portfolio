@@ -59,7 +59,7 @@ export default function Intro() {
   if (done) return null;
 
   return (
-    <div ref={root} className="fixed inset-0 z-100 bg-ink text-paper">
+    <div ref={root} className="fixed inset-0 z-100 bg-black text-white">
       <div className="intro-inner flex h-full flex-col justify-between p-5 md:p-12">
         <div className="flex justify-between font-mono text-xs uppercase tracking-widest">
           <span>{site.name}</span>

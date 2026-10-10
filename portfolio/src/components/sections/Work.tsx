@@ -87,9 +87,24 @@ export default function Work() {
                 {String(i + 1).padStart(2, "0")}
               </span>
 
-              <h3 className="text-about flex-1 font-display tracking-[-0.02em] transition-transform duration-500 ease-out group-hover:translate-x-3 md:group-hover:translate-x-6">
-                {p.title}
-              </h3>
+              <div className="flex-1">
+                <h3 className="text-about font-display transition-transform duration-500 ease-out group-hover:translate-x-3 md:group-hover:translate-x-6">
+                  {p.title}
+                </h3>
+                <p className="mt-2 font-mono text-[11px] uppercase tracking-widest opacity-60 md:hidden">
+                  {p.category} · {p.year}
+                </p>
+                <ul className="mt-3 flex flex-wrap gap-2 md:hidden">
+                  {p.stack.map((s) => (
+                    <li
+                      key={s}
+                      className="rounded-full border border-ink/20 px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest"
+                    >
+                      {s}
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
               <div className="hidden text-right font-mono text-xs uppercase leading-relaxed tracking-widest md:block">
                 <p>{p.category}</p>

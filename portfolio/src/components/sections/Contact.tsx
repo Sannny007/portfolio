@@ -6,6 +6,8 @@ import { getLenis } from "@/lib/lenis";
 import { site } from "@/data/site";
 import LocalTime from "../ui/LocalTime";
 import Year from "../ui/Year";
+import SocialLinks from "../ui/SocialLinks";
+
 
 export default function Contact() {
   const root = useRef<HTMLElement>(null);
@@ -22,7 +24,7 @@ export default function Contact() {
             duration: 1.2,
             ease: "power4.out",
             stagger: 0.12,
-            scrollTrigger: { trigger: ".contact-title", start: "top 85%" },
+            scrollTrigger: { trigger: ".contact-footer", start: "top 92%" },
           });
         },
       });
@@ -57,27 +59,15 @@ export default function Contact() {
           Let&apos;s build something <span className="italic text-accent">together.</span>
         </h2>
 
-        <a
-          href={`mailto:${site.email}`}
-          className="contact-details contact-fade text-about mt-10 inline-block wrap-break border-b border-ink/30 font-display italic transition-colors hover:border-accent hover:text-accent md:mt-16"
-        >
-          {site.email}
-        </a>
       </div>
 
-      <footer className="mt-24 grid gap-6 border-t border-ink/20 pt-5 font-mono text-xs uppercase tracking-widest md:grid-cols-3 md:items-center">
+      <footer className="contact-footer mt-24 grid gap-6 border-t border-ink/20 pt-5 font-mono text-xs uppercase tracking-widest md:grid-cols-3 md:items-center">
         <p className="contact-fade">
           <LocalTime location={site.location} timeZone={site.timeZone} abbr={site.timeZoneAbbr} />
         </p>
 
-        <ul className="contact-fade flex gap-6 md:justify-center">
-          {site.socials.map((s) => (
-            <li key={s.label}>
-              <a href={s.href} className="transition-colors hover:text-accent">
-                {s.label} ↗
-              </a>
-            </li>
-          ))}
+        <ul>
+        <SocialLinks className="contact-fade md:justify-center" />
         </ul>
 
         <div className="contact-fade flex items-center justify-between md:justify-end md:gap-8">

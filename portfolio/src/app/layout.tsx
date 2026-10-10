@@ -1,28 +1,20 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Hanken_Grotesk, DM_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import SmoothScroll from "@/components/layout/SmoothScroll";
+import Intro from "@/components/layout/Intro";
 import Nav from "@/components/layout/Nav";
 import Cursor from "@/components/layout/Cursor";
 import "lenis/dist/lenis.css";
 import "./globals.css";
-import Intro from "@/components/layout/Intro";
 
-const display = Instrument_Serif({
+const sans = Geist({
   subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
-  variable: "--font-instrument",
+  variable: "--font-geist-sans",
 });
 
-const sans = Hanken_Grotesk({
+const mono = Geist_Mono({
   subsets: ["latin"],
-  variable: "--font-hanken",
-});
-
-const mono = DM_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-dm-mono",
+  variable: "--font-geist-mono",
 });
 
 export const metadata: Metadata = {
@@ -30,9 +22,19 @@ export const metadata: Metadata = {
   description: "Portfolio of Sanny Kumar Sharma, a full-stack developer.",
 };
 
+
+const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(!t){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.classList.toggle('dark',t==='dark')}catch(e){}})()`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${sans.variable} ${mono.variable}`}
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="bg-paper font-sans text-ink antialiased">
         <Intro />
         <Cursor />

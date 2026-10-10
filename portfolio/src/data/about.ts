@@ -1,10 +1,10 @@
 import { site } from "./site";
 
 export const about = {
-  lead: "I'm Sanny Kumar Sharma, a full-stack developer who likes building interfaces that feel considered, and systems that hold up underneath them.",
+  lead: "I build web products with equal care for the details users notice and the foundations they never see.",
   body: [
-    "On the front end I work with React, Next.js and TypeScript, and I spend a lot of time on motion with GSAP and Three.js, because small details in how a page moves are what make it feel finished. On the back end I build with Node.js and Express, backed by MongoDB or PostgreSQL, with JWT-based authentication and clean REST APIs.",
-    "I'm in the second year of my B.Tech in Computer Science at IES University, Bhopal. Right now I'm going deeper into Next.js and learning Docker, so that what I build can be shipped and run the same way everywhere. I'm looking for internships and freelance projects where I can work on both sides of the stack. If you have something in mind, I'd like to hear about it.",
+    "I'm a full-stack developer who works across the whole stack. On the front end that means React, Next.js and TypeScript, with GSAP and Three.js for motion that has a purpose. On the back end I build REST APIs with Node.js and Express, protect them with JWT-based authentication and authorization, and model data in MongoDB or PostgreSQL.",
+    "I'm a second-year B.Tech Computer Science student at IES University, Bhopal. Right now I'm deepening my Next.js and learning Docker, so that what I build is easy to ship and run anywhere. I'm looking for projects where I can own features end to end, and I'd be glad to hear about yours.",
   ],
   education: {
     degree: "B.Tech, Computer Science & Engineering (Core)",

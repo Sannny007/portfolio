@@ -1,24 +1,36 @@
 @import "tailwindcss";
 
+
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --paper: #ece9e2;
-  --ink: #121212;
-  --accent: #e8452c;
+  --paper: #ffffff;
+  --ink: #171717;
+  --accent: #0070f3;
+  color-scheme: light;
+}
+
+.dark {
+  --paper: #000000;
+  --ink: #ededed;
+  --accent: #3291ff;
+  color-scheme: dark;
 }
 
 @theme inline {
   --color-paper: var(--paper);
   --color-ink: var(--ink);
   --color-accent: var(--accent);
-  --font-display: var(--font-instrument);
-  --font-sans: var(--font-hanken);
-  --font-mono: var(--font-dm-mono);
 
-  --text-hero: clamp(3.25rem, 12.5vw, 13rem);
-  --text-hero--line-height: 0.9;
-  --text-about: clamp(2.25rem, 6vw, 5.5rem);
-  --text-about--line-height: 1.05;
-  --text-marquee: clamp(3rem, 9vw, 8rem);
+  --font-display: var(--font-geist-sans);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --text-hero: clamp(2.25rem, 5.5vw, 4.5rem);
+  --text-hero--line-height: 1.02;
+  --text-about: clamp(1.5rem, 3vw, 2.5rem);
+  --text-about--line-height: 1.15;
+  --text-marquee: clamp(2rem, 5vw, 4rem);
   --text-marquee--line-height: 1;
 }
 
@@ -26,8 +38,25 @@ html {
   background: var(--paper);
 }
 
-.work-list:has(.work-item:hover) .work-item:not(:hover) {
-  opacity: 0.3;
+body {
+  background: var(--paper);
+  color: var(--ink);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+
+.font-display {
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+
+.italic {
+  font-style: normal;
 }
 
 .text-outline {
@@ -55,4 +84,157 @@ html {
   .marquee-track {
     animation: none;
   }
+}
+
+
+.work-list:has(.work-item:hover) .work-item:not(:hover) {
+  opacity: 0.3;
+}
+
+
+
+@property --nav-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes nav-spin {
+  to {
+    --nav-angle: 360deg;
+  }
+}
+
+.nav-glow {
+  position: relative;
+  isolation: isolate;
+  border-radius: 9999px;
+  /* light mode ka soft shadow */
+  box-shadow: 0 12px 32px -16px rgba(0, 0, 0, 0.28);
+}
+
+.nav-glow::before,
+.nav-glow::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--nav-angle),
+    #ff3d81,
+    #a855f7,
+    #3b82f6,
+    #22d3ee,
+    #34d399,
+    #ff3d81
+  );
+  animation: nav-spin 7s linear infinite;
+}
+
+.nav-glow::after {
+  inset: -2px;
+  filter: blur(14px);
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+}
+
+.nav-glow:hover::after {
+  opacity: 0.85;
+}
+
+.dark .nav-glow {
+  box-shadow: none;
+}
+
+.dark .nav-glow::after {
+  filter: blur(18px);
+  opacity: 0.7;
+}
+
+.nav-surface {
+  position: relative;
+  border-radius: inherit;
+  background: var(--paper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-glow::before,
+  .nav-glow::after {
+    animation: none;
+  }
+}
+
+.about-photo.is-color .about-photo-img {
+  filter: grayscale(0);
+}
+
+
+.logo-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+}
+
+
+.hero-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 55% at 78% 40%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
+    radial-gradient(28% 40% at 88% 62%, rgba(168, 85, 247, 0.16), transparent 70%),
+    radial-gradient(26% 36% at 68% 66%, rgba(52, 211, 153, 0.12), transparent 70%);
+  filter: blur(20px);
+}
+
+
+.stack-card {
+  position: relative;
+  --x: 50%;
+  --y: 50%;
+}
+
+.stack-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(
+    320px circle at var(--x) var(--y),
+    color-mix(in srgb, var(--accent) 14%, transparent),
+    transparent 70%
+  );
+}
+
+
+.stack-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(
+    260px circle at var(--x) var(--y),
+    #ff3d81,
+    #a855f7 35%,
+    #3b82f6 60%,
+    transparent 80%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.stack-card:hover::before,
+.stack-card:hover::after {
+  opacity: 1;
 }
