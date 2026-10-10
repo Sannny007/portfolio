@@ -3,8 +3,13 @@ export type Project = {
   title: string;
   year: string;
   category: string;
+  description: string;
   stack: string[];
+  image?: string;
+  live?: string;
+  github?: string;
 };
+
 
 export const projects: Project[] = [
   {
@@ -12,6 +17,8 @@ export const projects: Project[] = [
     title: "Project One",
     year: "2026",
     category: "Full-stack web app",
+    description:
+      "One or two lines on what this project does and the problem it solves.",
     stack: ["Next.js", "TypeScript", "MongoDB"],
   },
   {
@@ -19,6 +26,8 @@ export const projects: Project[] = [
     title: "Project Two",
     year: "2026",
     category: "REST API + Dashboard",
+    description:
+      "One or two lines on what this project does and the problem it solves.",
     stack: ["React", "Node.js", "PostgreSQL"],
   },
   {
@@ -26,6 +35,8 @@ export const projects: Project[] = [
     title: "Project Three",
     year: "2025",
     category: "Interactive / 3D",
+    description:
+      "One or two lines on what this project does and the problem it solves.",
     stack: ["Three.js", "GSAP", "TypeScript"],
   },
 ];

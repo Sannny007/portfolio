@@ -1,135 +1,125 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { useRef } from "react";
+import { FaGithub } from "react-icons/fa6";
+import { FiArrowUpRight } from "react-icons/fi";
 import { gsap, useGSAP } from "@/lib/gsap";
+import { useSpotlight } from "@/hooks/useSpotlight";
 import { projects } from "@/data/projects";
-
-const finePointer = () =>
-  window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
 export default function Work() {
   const root = useRef<HTMLElement>(null);
-  const preview = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
 
-  // rows ka scroll reveal
+  useSpotlight(root, ".stack-card");
+
   useGSAP(
     () => {
-      gsap.from(".work-row", {
+      gsap.from(".work-head", {
         opacity: 0,
-        y: 40,
+        y: 24,
         duration: 1,
         stagger: 0.1,
+        ease: "power2.out",
+        scrollTrigger: { trigger: ".work-head", start: "top 85%" },
+      });
+
+      gsap.from(".work-card", {
+        opacity: 0,
+        y: 50,
+        duration: 1,
+        stagger: 0.12,
         ease: "power3.out",
         clearProps: "opacity,transform",
-        scrollTrigger: { trigger: ".work-list", start: "top 80%" },
+        scrollTrigger: { trigger: ".work-grid", start: "top 85%" },
       });
     },
     { scope: root }
   );
 
-  // preview card ko cursor ke peeche chalana
-  useEffect(() => {
-    if (!finePointer()) return;
-    const el = preview.current;
-    if (!el) return;
-
-    gsap.set(el, { xPercent: -50, yPercent: -50, scale: 0.8, opacity: 0 });
-
-    const x = gsap.quickTo(el, "x", { duration: 0.6, ease: "power3" });
-    const y = gsap.quickTo(el, "y", { duration: 0.6, ease: "power3" });
-
-    const move = (e: PointerEvent) => {
-      x(e.clientX);
-      y(e.clientY);
-    };
-
-    window.addEventListener("pointermove", move);
-    return () => {
-      window.removeEventListener("pointermove", move);
-      gsap.killTweensOf(el);
-    };
-  }, []);
-
-  const show = (i: number) => {
-    if (!finePointer()) return;
-    setActive(i);
-    gsap.to(preview.current, { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" });
-  };
-
-  const hide = () => {
-    if (!finePointer()) return;
-    gsap.to(preview.current, { opacity: 0, scale: 0.8, duration: 0.3, ease: "power3.out" });
-  };
-
-  const current = projects[active];
-
   return (
-    <section ref={root} id="work" className="px-5 py-24 md:px-12 md:py-40">
-      <div className="mb-10 flex items-baseline justify-between font-mono text-xs uppercase tracking-widest md:mb-16">
-        <p>01 — Work</p>
-        <p>({String(projects.length).padStart(2, "0")})</p>
-      </div>
+    <section ref={root} id="work" className="px-5 py-24 md:px-12 md:py-32">
+      <p className="work-head mb-4 text-sm text-ink/50">Work</p>
 
-      <h2 className="text-about mb-12 font-display tracking-[-0.02em] md:mb-20">
-        Selected <span className="italic text-accent">work</span>
+      <h2 className="work-head text-about mb-12 max-w-3xl font-display md:mb-16">
+        Selected <span className="text-ink/45">projects.</span>
       </h2>
 
-      <ul className="work-list">
+      <div className="work-grid grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {projects.map((p, i) => (
-          <li key={p.slug} className="work-row">
-            <div
-              className="work-item group flex items-baseline gap-4 border-t border-ink/20 py-6 transition-opacity duration-300 md:gap-10 md:py-9"
-              onMouseEnter={() => show(i)}
-              onMouseLeave={hide}
-            >
-              <span className="font-mono text-xs tracking-widest opacity-50">
-                {String(i + 1).padStart(2, "0")}
-              </span>
+          <article
+            key={p.slug}
+            className="work-card stack-card group rounded-2xl border border-ink/10 bg-ink/3 p-2"
+          >
+            <div className="relative z-10">
+              {/* image / placeholder */}
+              <div className="relative aspect-16/10 overflow-hidden rounded-xl border border-ink/10 bg-ink/4">
+                {p.image ? (
+                  <Image
+                    src={p.image}
+                    alt={`${p.title} screenshot`}
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="placeholder-grid flex h-full items-center justify-center">
+                    <span className="font-mono text-xs uppercase tracking-widest text-ink/40">
+                      {String(i + 1).padStart(2, "0")} — Preview coming soon
+                    </span>
+                  </div>
+                )}
+              </div>
 
-              <div className="flex-1">
-                <h3 className="text-about font-display transition-transform duration-500 ease-out group-hover:translate-x-3 md:group-hover:translate-x-6">
-                  {p.title}
-                </h3>
-                <p className="mt-2 font-mono text-[11px] uppercase tracking-widest opacity-60 md:hidden">
-                  {p.category} · {p.year}
-                </p>
-                <ul className="mt-3 flex flex-wrap gap-2 md:hidden">
+              <div className="p-4 md:p-5">
+                <div className="mb-3 flex items-center justify-between font-mono text-[11px] uppercase tracking-widest text-ink/50">
+                  <span>{p.category}</span>
+                  <span>{p.year}</span>
+                </div>
+
+                <h3 className="text-xl font-semibold tracking-tight md:text-2xl">{p.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink/60">{p.description}</p>
+
+                <ul className="mt-5 flex flex-wrap gap-2">
                   {p.stack.map((s) => (
                     <li
                       key={s}
-                      className="rounded-full border border-ink/20 px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest"
+                      className="rounded-full border border-ink/15 px-3 py-1 text-xs"
                     >
                       {s}
                     </li>
                   ))}
                 </ul>
-              </div>
 
-              <div className="hidden text-right font-mono text-xs uppercase leading-relaxed tracking-widest md:block">
-                <p>{p.category}</p>
-                <p className="opacity-50">{p.year}</p>
+                {(p.github || p.live) && (
+                  <div className="mt-5 flex items-center gap-4 text-sm">
+                    {p.github && (
+                      <a
+                        href={p.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${p.title} on GitHub`}
+                        className="inline-flex items-center gap-2 text-ink/70 transition-colors hover:text-accent"
+                      >
+                        <FaGithub className="size-4" /> Code
+                      </a>
+                    )}
+                    {p.live && (
+                      <a
+                        href={p.live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-ink/70 transition-colors hover:text-accent"
+                      >
+                        Live <FiArrowUpRight className="size-4" />
+                      </a>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
-          </li>
+          </article>
         ))}
-        <li className="border-t border-ink/20" aria-hidden />
-      </ul>
-      <div
-        ref={preview}
-        className="pointer-events-none fixed left-0 top-0 z-40 flex h-80 w-64 flex-col justify-between bg-ink p-5 text-paper opacity-0"
-      >
-        <p className="font-mono text-[11px] uppercase tracking-widest opacity-60">
-          {String(active + 1).padStart(2, "0")} / {current.year}
-        </p>
-        <div>
-          <p className="mb-4 font-display text-4xl italic leading-none">{current.title}</p>
-          <ul className="space-y-1 font-mono text-[11px] uppercase tracking-widest">
-            {current.stack.map((s) => (
-              <li key={s}>{s}</li>
-            ))}
-          </ul>
-        </div>
       </div>
     </section>
   );
