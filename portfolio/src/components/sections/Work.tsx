@@ -1,131 +1,90 @@
 "use client";
 
-import Image from "next/image";
-import { useRef } from "react";
-import { FaGithub } from "react-icons/fa6";
-import { FiArrowUpRight } from "react-icons/fi";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { useEffect, useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useSpotlight } from "@/hooks/useSpotlight";
 import { projects } from "@/data/projects";
+import ProjectCard from "@/components/ui/ProjectCard";
+
+const fade = {
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-60px" },
+  transition: { duration: 0.8, ease: "easeOut" as const },
+};
+
+function PinnedTrain() {
+  const area = useRef<HTMLDivElement>(null);
+  const track = useRef<HTMLDivElement>(null);
+  const [maxX, setMaxX] = useState(0);
+
+  useEffect(() => {
+    const el = track.current;
+    if (!el) return;
+
+    const measure = () => setMaxX(Math.max(0, el.scrollWidth - window.innerWidth));
+    measure();
+
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
+  const { scrollYProgress } = useScroll({
+    target: area,
+    offset: ["start start", "end end"],
+  });
+  const x = useTransform(scrollYProgress, [0, 1], [0, -maxX]);
+
+  return (
+    <div
+      ref={area}
+      style={{ height: `calc(100svh + ${maxX}px)` }}
+      className="relative hidden md:block"
+    >
+      <div className="sticky top-0 flex h-svh items-center overflow-hidden">
+        <motion.div ref={track} style={{ x }} className="flex w-max gap-6 px-12">
+          {projects.map((p, i) => (
+            <div key={p.slug} className="w-[52vw] max-w-3xl shrink-0">
+              <ProjectCard project={p} index={i} />
+            </div>
+          ))}
+        </motion.div>
+      </div>
+    </div>
+  );
+}
 
 export default function Work() {
   const root = useRef<HTMLElement>(null);
-
   useSpotlight(root, ".stack-card");
 
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
-        gsap.from(".work-head", {
-          opacity: 0,
-          y: 24,
-          duration: 1,
-          stagger: 0.1,
-          ease: "power2.out",
-          immediateRender: false,
-          scrollTrigger: { trigger: ".work-head", start: "top 85%" },
-        });
-
-        gsap.from(".work-card", {
-          opacity: 0,
-          y: 50,
-          duration: 1,
-          stagger: 0.12,
-          ease: "power3.out",
-          clearProps: "opacity,transform",
-          immediateRender: false,
-          scrollTrigger: { trigger: ".work-grid", start: "top 85%" },
-        });
-      });
-
-      return () => mm.revert();
-    },
-    { scope: root }
-  );
-
   return (
-    <section ref={root} id="work" className="px-5 py-24 md:px-12 md:py-32">
-      <p className="work-head mb-4 text-sm text-ink/50">Work</p>
-
-      <h2 className="work-head text-about mb-12 max-w-3xl font-display md:mb-16">
-        Selected <span className="text-ink/45">projects.</span>
-      </h2>
-
-      <div className="work-grid grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <section ref={root} id="work" className="pb-24 md:pb-0">
+      <div className="px-5 pt-24 md:px-12 md:pt-32">
+        <motion.p {...fade} className="mb-4 text-sm text-ink/50">
+          Work
+        </motion.p>
+        <motion.h2 {...fade} className="text-about mb-12 max-w-3xl font-display">
+          Selected <span className="text-ink/45">projects.</span>
+        </motion.h2>
+      </div>
+      <PinnedTrain />
+      <div className="grid gap-4 px-5 md:hidden">
         {projects.map((p, i) => (
-          <article
+          <motion.div
             key={p.slug}
-            className="work-card stack-card group rounded-2xl border border-ink/10 bg-ink/3 p-2"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <div className="relative z-10">
-              <div className="relative aspect-16/10 overflow-hidden rounded-xl border border-ink/10 bg-ink/4">
-                {p.image ? (
-                  <Image
-                    src={p.image}
-                    alt={`${p.title} screenshot`}
-                    fill
-                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="placeholder-grid flex h-full items-center justify-center">
-                    <span className="font-mono text-xs uppercase tracking-widest text-ink/40">
-                      {String(i + 1).padStart(2, "0")} — Preview coming soon
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              <div className="p-4 md:p-5">
-                <div className="mb-3 flex items-center justify-between font-mono text-[11px] uppercase tracking-widest text-ink/50">
-                  <span>{p.category}</span>
-                  <span>{p.year}</span>
-                </div>
-
-                <h3 className="text-xl font-semibold tracking-tight md:text-2xl">{p.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-ink/60">{p.description}</p>
-
-                <ul className="mt-5 flex flex-wrap gap-2">
-                  {p.stack.map((s) => (
-                    <li
-                      key={s}
-                      className="rounded-full border border-ink/15 px-3 py-1 text-xs"
-                    >
-                      {s}
-                    </li>
-                  ))}
-                </ul>
-
-                {(p.github || p.live) && (
-                  <div className="mt-5 flex items-center gap-4 text-sm">
-                    {p.github && (
-                      <a
-                        href={p.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`${p.title} on GitHub`}
-                        className="inline-flex items-center gap-2 text-ink/70 transition-colors hover:text-accent"
-                      >
-                        <FaGithub className="size-4" /> Code
-                      </a>
-                    )}
-                    {p.live && (
-                      <a
-                        href={p.live}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-ink/70 transition-colors hover:text-accent"
-                      >
-                        Live <FiArrowUpRight className="size-4" />
-                      </a>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </article>
+            <ProjectCard project={p} index={i} />
+          </motion.div>
         ))}
       </div>
     </section>

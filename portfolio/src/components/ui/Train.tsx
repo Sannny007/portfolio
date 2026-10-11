@@ -21,9 +21,11 @@ const wrap = (min: number, max: number, v: number) => {
 export default function Train({
   children,
   baseVelocity = 2.5,
+  scrollBoost = 0.5,
 }: {
   children: React.ReactNode;
   baseVelocity?: number;
+  scrollBoost?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { margin: "200px" });
@@ -33,22 +35,16 @@ export default function Train({
   const { scrollY } = useScroll();
   const scrollVelocity = useVelocity(scrollY);
   const smoothVelocity = useSpring(scrollVelocity, { damping: 50, stiffness: 400 });
-  const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 5], { clamp: false });
   const x = useTransform(baseX, (v) => `${wrap(-50, 0, v)}%`);
-  const direction = useRef(baseVelocity < 0 ? -1 : 1);
 
   useAnimationFrame((_, delta) => {
     if (!inView || reduce) return;
 
-    const base = Math.abs(baseVelocity);
-    let moveBy = direction.current * base * (delta / 1000);
+    const dir = baseVelocity < 0 ? -1 : 1;
+    const boost = 1 + Math.min((Math.abs(smoothVelocity.get()) / 1000) * scrollBoost, 4);
+    const dt = Math.min(delta, 50) / 1000;
 
-    const vf = velocityFactor.get();
-    if (vf < 0) direction.current = baseVelocity < 0 ? 1 : -1;
-    else if (vf > 0) direction.current = baseVelocity < 0 ? -1 : 1;
-
-    moveBy += direction.current * moveBy * Math.abs(vf);
-    baseX.set(baseX.get() + moveBy);
+    baseX.set(baseX.get() + dir * Math.abs(baseVelocity) * dt * boost);
   });
 
   if (reduce) {

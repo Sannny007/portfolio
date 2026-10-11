@@ -41,7 +41,7 @@ export default function Stack() {
               ))}
             </ul>
 
-            <Train baseVelocity={i % 2 ? -2.5 : 2.5}>
+            <Train baseVelocity={i % 2 ? -2.5 : 1.5}scrollBoost={0}>
               {filled.map(({ name, Icon, learning }, k) => (
                 <div
                   key={`${name}-${k}`}
