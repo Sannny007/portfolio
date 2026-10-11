@@ -15,24 +15,32 @@ export default function Work() {
 
   useGSAP(
     () => {
-      gsap.from(".work-head", {
-        opacity: 0,
-        y: 24,
-        duration: 1,
-        stagger: 0.1,
-        ease: "power2.out",
-        scrollTrigger: { trigger: ".work-head", start: "top 85%" },
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.from(".work-head", {
+          opacity: 0,
+          y: 24,
+          duration: 1,
+          stagger: 0.1,
+          ease: "power2.out",
+          immediateRender: false,
+          scrollTrigger: { trigger: ".work-head", start: "top 85%" },
+        });
+
+        gsap.from(".work-card", {
+          opacity: 0,
+          y: 50,
+          duration: 1,
+          stagger: 0.12,
+          ease: "power3.out",
+          clearProps: "opacity,transform",
+          immediateRender: false,
+          scrollTrigger: { trigger: ".work-grid", start: "top 85%" },
+        });
       });
 
-      gsap.from(".work-card", {
-        opacity: 0,
-        y: 50,
-        duration: 1,
-        stagger: 0.12,
-        ease: "power3.out",
-        clearProps: "opacity,transform",
-        scrollTrigger: { trigger: ".work-grid", start: "top 85%" },
-      });
+      return () => mm.revert();
     },
     { scope: root }
   );
@@ -52,7 +60,6 @@ export default function Work() {
             className="work-card stack-card group rounded-2xl border border-ink/10 bg-ink/3 p-2"
           >
             <div className="relative z-10">
-              {/* image / placeholder */}
               <div className="relative aspect-16/10 overflow-hidden rounded-xl border border-ink/10 bg-ink/4">
                 {p.image ? (
                   <Image

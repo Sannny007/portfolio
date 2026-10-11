@@ -36,12 +36,11 @@
 
 html {
   background: var(--paper);
+  transition: background-color 0.3s ease;
 }
 
 body {
-  background: var(--paper);
   color: var(--ink);
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 ::selection {
@@ -93,15 +92,10 @@ body {
 
 
 
-@property --nav-angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
 
-@keyframes nav-spin {
+@keyframes glow-spin {
   to {
-    --nav-angle: 360deg;
+    rotate: 360deg;
   }
 }
 
@@ -109,58 +103,60 @@ body {
   position: relative;
   isolation: isolate;
   border-radius: 9999px;
-  /* light mode ka soft shadow */
   box-shadow: 0 12px 32px -16px rgba(0, 0, 0, 0.28);
-}
-
-.nav-glow::before,
-.nav-glow::after {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  z-index: -1;
-  border-radius: inherit;
-  background: conic-gradient(
-    from var(--nav-angle),
-    #ff3d81,
-    #a855f7,
-    #3b82f6,
-    #22d3ee,
-    #34d399,
-    #ff3d81
-  );
-  animation: nav-spin 7s linear infinite;
-}
-
-.nav-glow::after {
-  inset: -2px;
-  filter: blur(14px);
-  opacity: 0.5;
-  transition: opacity 0.4s ease;
-}
-
-.nav-glow:hover::after {
-  opacity: 0.85;
 }
 
 .dark .nav-glow {
   box-shadow: none;
 }
 
-.dark .nav-glow::after {
+.glow-ring,
+.glow-blur {
+  position: absolute;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.glow-ring {
+  inset: -1px;
+}
+
+.glow-blur {
+  inset: -2px;
+  filter: blur(14px);
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+}
+
+.nav-glow:hover .glow-blur {
+  opacity: 0.85;
+}
+
+.dark .glow-blur {
   filter: blur(18px);
   opacity: 0.7;
 }
 
-.nav-surface {
-  position: relative;
-  border-radius: inherit;
-  background: var(--paper);
+.glow-ring::before,
+.glow-blur::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 150%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  background: conic-gradient(#ff3d81, #a855f7, #3b82f6, #22d3ee, #34d399, #ff3d81);
+  animation: glow-spin 8s linear infinite;
+  will-change: rotate;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .nav-glow::before,
-  .nav-glow::after {
+
+  .glow-ring::before,
+  .glow-blur::before {
     animation: none;
   }
 }
@@ -204,11 +200,9 @@ body {
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.3s ease;
-  background: radial-gradient(
-    320px circle at var(--x) var(--y),
-    color-mix(in srgb, var(--accent) 14%, transparent),
-    transparent 70%
-  );
+  background: radial-gradient(320px circle at var(--x) var(--y),
+      color-mix(in srgb, var(--accent) 14%, transparent),
+      transparent 70%);
 }
 
 
@@ -221,13 +215,11 @@ body {
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.3s ease;
-  background: radial-gradient(
-    260px circle at var(--x) var(--y),
-    #ff3d81,
-    #a855f7 35%,
-    #3b82f6 60%,
-    transparent 80%
-  );
+  background: radial-gradient(260px circle at var(--x) var(--y),
+      #ff3d81,
+      #a855f7 35%,
+      #3b82f6 60%,
+      transparent 80%);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
@@ -244,4 +236,46 @@ body {
     linear-gradient(to right, color-mix(in srgb, var(--ink) 8%, transparent) 1px, transparent 1px),
     linear-gradient(to bottom, color-mix(in srgb, var(--ink) 8%, transparent) 1px, transparent 1px);
   background-size: 32px 32px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.nav-surface {
+  position: relative;
+  border-radius: inherit;
+  background: var(--paper);
+}
+
+
+.site-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 40% at 50% -10%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 70%),
+    radial-gradient(35% 30% at 88% 18%, rgba(168, 85, 247, 0.1), transparent 70%),
+    radial-gradient(35% 30% at 8% 40%, rgba(52, 211, 153, 0.07), transparent 70%);
+}
+
+.site-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--ink) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--ink) 6%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+}
+
+
+.logo-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
 }

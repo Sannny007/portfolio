@@ -10,6 +10,10 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const lenis = new Lenis({ duration: 1.2 });
+    const refresh = () => ScrollTrigger.refresh();
+    window.addEventListener("load", refresh);
+    document.fonts?.ready.then(refresh);
+    const refreshTimer = window.setTimeout(refresh, 1500);
     setLenis(lenis);
     lenis.on("scroll", ScrollTrigger.update);
     const tick = (time: number) => lenis.raf(time * 1000);
@@ -19,6 +23,8 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       gsap.ticker.remove(tick);
       setLenis(null);
       lenis.destroy();
+      window.removeEventListener("load", refresh);
+      window.clearTimeout(refreshTimer);
     };
   }, []);
 

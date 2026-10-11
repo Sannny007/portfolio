@@ -37,6 +37,6 @@ export default function Cursor() {
     <div
       ref={ref}
       className="pointer-events-none fixed left-0 top-0 z-60 h-3 w-3 rounded-full bg-accent opacity-0"
-      />
+    />
   );
 }

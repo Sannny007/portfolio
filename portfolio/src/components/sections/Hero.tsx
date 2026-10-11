@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { gsap, SplitText, useGSAP } from "@/lib/gsap";
 import { onIntroDone } from "@/lib/intro";
 import { getLenis } from "@/lib/lenis";
+import GlowRing from "../ui/GlowRing";
 
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -12,6 +13,8 @@ export default function Hero() {
   useGSAP(
     (_, contextSafe) => {
       const play = contextSafe!(() => {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
         SplitText.create(".hero-title", {
           type: "lines",
           mask: "lines",
@@ -60,13 +63,12 @@ export default function Hero() {
   return (
     <section
       ref={root}
-      className="hero-glow relative isolate flex min-h-svh items-center px-5 pb-12 pt-32 md:px-12"
-    >
+      className="hero-glow relative isolate flex min-h-svh items-center px-5 pb-12 pt-32 md:px-12">
       <div className="grid w-full items-center gap-10 md:grid-cols-12 md:gap-8">
         <div className="order-2 flex flex-col gap-8 md:order-1 md:col-span-7">
           <p className="hero-fade inline-flex w-fit items-center gap-2 rounded-full border border-ink/15 px-3.5 py-1.5 text-sm text-ink/70">
             <span className="relative flex size-2">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500 opacity-60" />
+              <span className="absolute inline-flex size-full rounded-full bg-emerald-500 opacity-60 motion-safe:animate-ping" />
               <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
             </span>
             Available
@@ -102,9 +104,10 @@ export default function Hero() {
 
         <div className="hero-photo order-1 mx-auto w-44 sm:w-56 md:order-2 md:col-span-5 md:ml-auto md:w-full md:max-w-sm">
           <div className="nav-glow p-3px">
+            <GlowRing />
             <div className="nav-surface relative aspect-square w-full overflow-hidden">
               <Image
-                src="/images/sanny.png"
+                src="/images/sanny.webp"
                 alt="Portrait of Sanny Kumar Sharma"
                 fill
                 priority

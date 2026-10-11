@@ -5,7 +5,7 @@ const email = "sanny433sharma@gmail.com";
 
 const socials: Social[] = [
   { label: "GitHub", href: "https://github.com/Sannny007", icon: "github" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/sanny-kumar-sharma-2a8b7540a/", icon: "linkedin" }, 
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/sanny-kumar-sharma-2a8b7540a/", icon: "linkedin" },
   { label: "Email", href: `mailto:${email}`, icon: "email" },
 ];
 
@@ -16,4 +16,5 @@ export const site = {
   timeZone: "Asia/Kolkata",
   timeZoneAbbr: "IST",
   socials,
+  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, ""),
 };

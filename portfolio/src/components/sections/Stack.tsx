@@ -1,115 +1,65 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { motion } from "framer-motion";
 import { stackGroups } from "@/data/stack";
+import Train from "@/components/ui/Train";
+
+const fade = {
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-60px" },
+  transition: { duration: 0.8, ease: "easeOut" as const },
+};
 
 export default function Stack() {
-  const root = useRef<HTMLElement>(null);
-
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
-        gsap.from(".stack-head", {
-          opacity: 0,
-          y: 24,
-          duration: 1,
-          stagger: 0.1,
-          ease: "power2.out",
-          scrollTrigger: { trigger: ".stack-head", start: "top 85%" },
-        });
-
-        gsap.utils.toArray<HTMLElement>(".stack-card").forEach((card) => {
-          const tl = gsap.timeline({
-            scrollTrigger: { trigger: card, start: "top 88%" },
-          });
-
-          tl.from(card, {
-            opacity: 0,
-            y: 60,
-            duration: 1,
-            ease: "power3.out",
-            clearProps: "opacity,transform",
-          }).from(
-            card.querySelectorAll(".stack-chip"),
-            {
-              opacity: 0,
-              scale: 0.5,
-              y: 20,
-              duration: 0.6,
-              ease: "back.out(2)",
-              stagger: { each: 0.07, from: "random" },
-              clearProps: "opacity,transform",
-            },
-            "-=0.55"
-          );
-        });
-      });
-
-      return () => mm.revert();
-    },
-    { scope: root }
-  );
-
-
-  useEffect(() => {
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-
-    const grid = root.current?.querySelector<HTMLElement>(".stack-grid");
-    if (!grid) return;
-
-    const move = (e: PointerEvent) => {
-      const card = (e.target as HTMLElement).closest<HTMLElement>(".stack-card");
-      if (!card) return;
-      const r = card.getBoundingClientRect();
-      card.style.setProperty("--x", `${e.clientX - r.left}px`);
-      card.style.setProperty("--y", `${e.clientY - r.top}px`);
-    };
-
-    grid.addEventListener("pointermove", move);
-    return () => grid.removeEventListener("pointermove", move);
-  }, []);
-
   return (
-    <section ref={root} id="stack" className="px-5 py-24 md:px-12 md:py-32">
-      <p className="stack-head mb-4 text-sm text-ink/50">Tech stack</p>
-
-      <h2 className="stack-head text-about mb-12 max-w-3xl font-display md:mb-16">
-        Tools I use to build <span className="text-ink/45">end to end.</span>
-      </h2>
-
-      <div className="stack-grid grid gap-4 md:grid-cols-2">
-        {stackGroups.map((g) => (
-          <div
-            key={g.title}
-            className="stack-card rounded-2xl border border-ink/10 bg-ink/[0.03] p-6 md:p-8"
-          >
-            <div className="relative z-10">
-              <h3 className="mb-1 text-lg font-medium">{g.title}</h3>
-              <p className="mb-6 text-sm text-ink/50">{g.blurb}</p>
-
-              <ul className="flex flex-wrap gap-2.5">
-                {g.items.map(({ name, Icon, learning }) => (
-                  <li
-                    key={name}
-                    className="stack-chip flex items-center gap-2.5 rounded-full border border-ink/15 px-4 py-2 text-sm transition-[translate,border-color] duration-300 hover:-translate-y-0.5 hover:border-accent"
-                  >
-                    <Icon className="size-4" />
-                    {name}
-                    {learning && (
-                      <span className="font-mono text-[10px] uppercase tracking-widest text-accent">
-                        learning
-                      </span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        ))}
+    <section id="stack" className="py-24 md:py-32">
+      <div className="px-5 md:px-12">
+        <motion.p {...fade} className="mb-4 text-sm text-ink/50">
+          Tech stack
+        </motion.p>
+        <motion.h2 {...fade} className="text-about mb-12 max-w-3xl font-display md:mb-16">
+          Tools I use to build <span className="text-ink/45">end to end.</span>
+        </motion.h2>
       </div>
+
+      {stackGroups.map((g, i) => {
+        const filled = Array.from(
+          { length: Math.max(1, Math.ceil(8 / g.items.length)) },
+          () => g.items
+        ).flat();
+
+        return (
+          <div key={g.title} className="border-t border-ink/10 py-8 md:py-10">
+            <div className="mb-5 flex items-baseline justify-between gap-6 px-5 md:px-12">
+              <h3 className="text-lg font-medium md:text-xl">{g.title}</h3>
+              <p className="hidden text-sm text-ink/50 md:block">{g.blurb}</p>
+            </div>
+            <ul className="sr-only">
+              {g.items.map((t) => (
+                <li key={t.name}>{t.name}</li>
+              ))}
+            </ul>
+
+            <Train baseVelocity={i % 2 ? -2.5 : 2.5}>
+              {filled.map(({ name, Icon, learning }, k) => (
+                <div
+                  key={`${name}-${k}`}
+                  className="mr-3 flex shrink-0 items-center gap-2.5 rounded-full border border-ink/15 bg-paper/60 px-5 py-2.5 text-sm md:text-base"
+                >
+                  <Icon className="size-4 md:size-5" />
+                  {name}
+                  {learning && (
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-accent">
+                      learning
+                    </span>
+                  )}
+                </div>
+              ))}
+            </Train>
+          </div>
+        );
+      })}
     </section>
   );
 }

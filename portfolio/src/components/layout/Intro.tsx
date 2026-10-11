@@ -14,7 +14,7 @@ export default function Intro() {
   useGSAP(
     () => {
       const seen = sessionStorage.getItem("intro-seen");
-      const reduce = window.matchMedia("(prefers-reduced-motions: reduce)").matches;
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       if (seen || reduce) {
         setDone(true);
@@ -22,13 +22,14 @@ export default function Intro() {
         return;
       }
 
+      const previousOverflow = document.documentElement.style.overflow;
       document.documentElement.style.overflow = "hidden";
       const counter = { v: 0 };
 
       const tl = gsap.timeline({
         onComplete: () => {
           sessionStorage.setItem("intro-seen", "1");
-          document.documentElement.style.overflow = "";
+          document.documentElement.style.overflow = previousOverflow;
           setDone(true);
         },
       });
@@ -52,6 +53,10 @@ export default function Intro() {
         .addLabel("reveal")
         .to(root.current, { yPercent: -100, duration: 1.1, ease: "power4.inOut" }, "reveal")
         .add(finishedIntro, "reveal");
+
+      return () => {
+        document.documentElement.style.overflow = previousOverflow;
+      };
     },
     { scope: root }
   );
@@ -69,8 +74,7 @@ export default function Intro() {
         <div className="flex items-end justify-between">
           <span
             ref={count}
-            className="text-hero font-display leading-none tracking-[-0.03em]"
-          >
+            className="text-hero font-display leading-none tracking-[-0.03em]">
             000
           </span>
           <span className="mb-2 font-mono text-xs uppercase tracking-widest opacity-60">Loading...</span>

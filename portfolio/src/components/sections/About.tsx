@@ -13,36 +13,44 @@ export default function About() {
 
   useGSAP(
     () => {
-      SplitText.create(".about-lead", {
-        type: "words",
-        autoSplit: true,
-        onSplit(self) {
-          return gsap.fromTo(
-            self.words,
-            { opacity: 0.2 },
-            {
-              opacity: 1,
-              ease: "none",
-              stagger: 0.1,
-              scrollTrigger: {
-                trigger: ".about-lead",
-                start: "top 80%",
-                end: "bottom 50%",
-                scrub: true,
-              },
-            }
-          );
-        },
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        SplitText.create(".about-lead", {
+          type: "words",
+          autoSplit: true,
+          onSplit(self) {
+            return gsap.fromTo(
+              self.words,
+              { opacity: 0.2 },
+              {
+                opacity: 1,
+                ease: "none",
+                stagger: 0.1,
+                immediateRender: false,
+                scrollTrigger: {
+                  trigger: ".about-lead",
+                  start: "top 80%",
+                  end: "bottom 50%",
+                  scrub: true,
+                },
+              }
+            );
+          },
+        });
+
+        gsap.from(".about-fade", {
+          opacity: 0,
+          y: 24,
+          duration: 1,
+          stagger: 0.12,
+          ease: "power2.out",
+          immediateRender: false,
+          scrollTrigger: { trigger: ".about-details", start: "top 85%" },
+        });
       });
 
-      gsap.from(".about-fade", {
-        opacity: 0,
-        y: 24,
-        duration: 1,
-        stagger: 0.12,
-        ease: "power2.out",
-        scrollTrigger: { trigger: ".about-details", start: "top 85%" },
-      });
+      return () => mm.revert();
     },
     { scope: root }
   );
@@ -50,9 +58,7 @@ export default function About() {
   return (
     <section ref={root} id="about" className="px-5 py-24 md:px-12 md:py-32">
       <p className="mb-6 text-sm text-ink/50 md:mb-10">About</p>
-
       <p className="about-lead text-about max-w-5xl font-display">{about.lead}</p>
-
       <div className="about-details mt-14 grid gap-10 md:mt-24 md:grid-cols-12">
         <div className="space-y-5 text-base leading-relaxed text-ink/70 md:col-span-6 md:text-lg">
           {about.body.map((p, i) => (
@@ -77,10 +83,7 @@ export default function About() {
               {about.learning.map((item) => (
                 <li
                   key={item}
-                  className="rounded-full border border-ink/15 px-3 py-1 text-sm"
-                >
-                  {item}
-                </li>
+                  className="rounded-full border border-ink/15 px-3 py-1 text-sm">{item}</li>
               ))}
             </ul>
           </div>
