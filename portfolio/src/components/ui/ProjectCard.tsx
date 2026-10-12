@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FaArrowUpRightDots, FaGithub } from "react-icons/fa6";
+import { FaGithub } from "react-icons/fa6";
 import { FiArrowUpRight } from "react-icons/fi";
 import type { Project } from "@/data/projects";
 

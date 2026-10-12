@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, type MouseEvent } from "react";
 import { gsap, SplitText, useGSAP } from "@/lib/gsap";
 import { onIntroDone } from "@/lib/intro";
 import { getLenis } from "@/lib/lenis";
@@ -53,7 +53,7 @@ export default function Hero() {
     { scope: root }
   );
 
-  const go = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const go = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
     const lenis = getLenis();
     if (!lenis) return;
     e.preventDefault();
@@ -107,7 +107,7 @@ export default function Hero() {
             <GlowRing />
             <div className="nav-surface relative aspect-square w-full overflow-hidden">
               <Image
-                src="/images/sanny.webp"
+                src="/images/projects/sanny.webp"
                 alt="Portrait of Sanny Kumar Sharma"
                 fill
                 priority
