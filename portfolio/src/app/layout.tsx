@@ -42,6 +42,7 @@ export const metadata: Metadata = {
     title,
     description,
   },
+  verification: { google: "s4pgZ2MlRVLqFfBDf-qsVbXJQY37Soh0uKfL5eNQ1bg" },
 };
 
 export const viewport: Viewport = {
@@ -63,15 +64,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-        <body className="font-sans text-ink antialiased">
-          <div className="site-bg" aria-hidden="true" />
-          <Intro />
-          ...
-          <Intro />
-          <Cursor />
-          <Nav />
-          <SmoothScroll>{children}</SmoothScroll>
-        </body>
+      <body className="font-sans text-ink antialiased">
+        <div className="site-bg" aria-hidden="true" />
+        <Intro />
+        <Cursor />
+        <Nav />
+        <SmoothScroll>{children}</SmoothScroll>
+      </body>
     </html>
   );
 }
